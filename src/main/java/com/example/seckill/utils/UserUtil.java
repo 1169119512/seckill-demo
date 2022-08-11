@@ -34,42 +34,47 @@ public class UserUtil {
             users.add(user);
         }
         System.out.println("create user");
-        //插入数据库
-        Connection connection = getConn();
-        String sql = "insert into t_user(login_count, nickname, register_date, salt, password, id) values(?, ?, ?, ?, ?, ?)";
-        PreparedStatement pstm = connection.prepareStatement(sql);
-        for (int i = 0; i < users.size(); i++) {
-            User user = users.get(i);
-            pstm.setInt(1, user.getLoginCount());
-            pstm.setString(2, user.getNickname());
-            pstm.setTimestamp(3, new Timestamp(user.getRegisterDate().getTime()));
-            pstm.setString(4, user.getSalt());
-            pstm.setString(5, user.getPassword());
-            pstm.setLong(6, user.getId());
-            pstm.addBatch();
-        }
-        pstm.executeBatch();
-        pstm.clearParameters();
-        connection.close();
-        System.out.println("insert to db");
+//        //插入数据库
+//        Connection connection = getConn();
+//        String sql = "insert into t_user(login_count, nickname, register_date, salt, password, id) values(?, ?, ?, ?, ?, ?)";
+//        PreparedStatement pstm = connection.prepareStatement(sql);
+//        for (int i = 0; i < users.size(); i++) {
+//            User user = users.get(i);
+//            pstm.setInt(1, user.getLoginCount());
+//            pstm.setString(2, user.getNickname());
+//            pstm.setTimestamp(3, new Timestamp(user.getRegisterDate().getTime()));
+//            pstm.setString(4, user.getSalt());
+//            pstm.setString(5, user.getPassword());
+//            pstm.setLong(6, user.getId());
+//            pstm.addBatch();
+//        }
+//        pstm.executeBatch();
+//        pstm.clearParameters();
+//        connection.close();
+//        System.out.println("insert to db");
         //登录，生成UserTicket
-        String urlString = "http://localhost:8080/doLogin";
-        File file = new File("E:\\Users\\zwh\\Desktop\\config.txt");
+        String urlString = "http://localhost:8080/login/doLogin";
+        //删除已保存的（手机号,userTicket）这样的文件，这个文件是用于jmeter测试的
+        File file = new File("C:\\Users\\localhost\\Desktop\\seckill\\config.txt");
         if (file.exists()) {
             file.delete();
         }
         RandomAccessFile raf = new RandomAccessFile(file, "rw");
         raf.seek(0);
+        //对连接请求并获得userTicket
         for (int i = 0; i < users.size(); i++) {
             User user = users.get(i);
             URL url = new URL(urlString);
             HttpURLConnection co = (HttpURLConnection) url.openConnection();
             co.setRequestMethod("POST");
             co.setDoOutput(true);
+            //把请求连接变成流的形式
             OutputStream out = co.getOutputStream();
+            //在请求上添加手机号密码，根据手机号密码获取userTicket
             String params = "mobile=" + user.getId() + "&password=" + MD5Util.inputPassToFromPass("123456");
             out.write(params.getBytes());
             out.flush();
+            //把请求连接变成流的形式，获取所有返回的数据
             InputStream inputStream = co.getInputStream();
             ByteArrayOutputStream bout = new ByteArrayOutputStream();
             byte[] bytes = new byte[1024];
@@ -79,10 +84,13 @@ public class UserUtil {
             }
             inputStream.close();
             bout.close();
+            //返回的数据为String类型
             String response = new String(bout.toByteArray());
             ObjectMapper objectMapper = new ObjectMapper();
 
+            //获取返回值类型
             RespBean respBean = objectMapper.readValue(response, RespBean.class);
+            //得到userTicket
             String userTicket = ((String) respBean.getObj());
             System.out.println(respBean);
             System.out.println("create userTicket :" + user.getId() + ":" + userTicket);
@@ -99,7 +107,7 @@ public class UserUtil {
     private static Connection getConn() throws Exception {
         String url = "jdbc:mysql://localhost:3306/seckill?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai";
         String username = "root";
-        String password = "root";
+        String password = "123456";
         String driver = "com.mysql.cj.jdbc.Driver";
         Class.forName(driver);
         return DriverManager.getConnection(url, username, password);

@@ -70,12 +70,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public User getUserByCookie(HttpServletRequest request, HttpServletResponse response, String userTick) {
-        if(null == userTick){
+    public User getUserByCookie(HttpServletRequest request, HttpServletResponse response, String userTicket) {
+        if(null == userTicket){
             return null;
         }
-        User user =(User) redisTemplate.opsForValue().get("user:" + userTick);
-        CookieUtil.setCookie(request,response,"userTick",userTick);
+        User user =(User) redisTemplate.opsForValue().get("user:" + userTicket);
+        CookieUtil.setCookie(request,response,"userTicket",userTicket);
         return user;
     }
 }

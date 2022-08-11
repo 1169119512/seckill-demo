@@ -55,6 +55,7 @@ mybatis-plus:
   # 配置mybatis数据返回类型别名（默认别名是类名）
   type-aliases-package: com.example.seckill.pojo
 
-  logging:
-    level:
-      com.example.sekilldemo.mapper: debug
+#配置mysql语句控制台打印
+logging:
+  level:
+    com.example.seckill.mapper: debug

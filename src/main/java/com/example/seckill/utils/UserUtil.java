@@ -34,24 +34,24 @@ public class UserUtil {
             users.add(user);
         }
         System.out.println("create user");
-//        //插入数据库
-//        Connection connection = getConn();
-//        String sql = "insert into t_user(login_count, nickname, register_date, salt, password, id) values(?, ?, ?, ?, ?, ?)";
-//        PreparedStatement pstm = connection.prepareStatement(sql);
-//        for (int i = 0; i < users.size(); i++) {
-//            User user = users.get(i);
-//            pstm.setInt(1, user.getLoginCount());
-//            pstm.setString(2, user.getNickname());
-//            pstm.setTimestamp(3, new Timestamp(user.getRegisterDate().getTime()));
-//            pstm.setString(4, user.getSalt());
-//            pstm.setString(5, user.getPassword());
-//            pstm.setLong(6, user.getId());
-//            pstm.addBatch();
-//        }
-//        pstm.executeBatch();
-//        pstm.clearParameters();
-//        connection.close();
-//        System.out.println("insert to db");
+        //插入数据库
+        Connection connection = getConn();
+        String sql = "insert into t_user(login_count, nickname, register_date, salt, password, id) values(?, ?, ?, ?, ?, ?)";
+        PreparedStatement pstm = connection.prepareStatement(sql);
+        for (int i = 0; i < users.size(); i++) {
+            User user = users.get(i);
+            pstm.setInt(1, user.getLoginCount());
+            pstm.setString(2, user.getNickname());
+            pstm.setTimestamp(3, new Timestamp(user.getRegisterDate().getTime()));
+            pstm.setString(4, user.getSalt());
+            pstm.setString(5, user.getPassword());
+            pstm.setLong(6, user.getId());
+            pstm.addBatch();
+        }
+        pstm.executeBatch();
+        pstm.clearParameters();
+        connection.close();
+        System.out.println("insert to db");
         //登录，生成UserTicket
         String urlString = "http://localhost:8080/login/doLogin";
         //删除已保存的（手机号,userTicket）这样的文件，这个文件是用于jmeter测试的

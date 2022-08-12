@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.stereotype.Controller;
 
 /**
- *
+ * 1000线程循环10次测试三次
  * Windows 优化前QPS:1148
  * Linux   优化前QPS:46.4
  *

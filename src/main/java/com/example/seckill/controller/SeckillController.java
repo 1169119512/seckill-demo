@@ -14,6 +14,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+/**
+ *  1000线程循环10次测试3次
+ *  Windows 优化前QPS:1289.5
+ *  Linux   优化前QPS:332。9
+ *
+ *
+ */
 @Controller
 @RequestMapping("/seckill")
 public class SeckillController {

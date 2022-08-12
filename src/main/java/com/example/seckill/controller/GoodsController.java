@@ -17,6 +17,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+/**
+ * 1000线程循环10次测试3次
+ *   1000线程循环10次
+ *  Windows 优化前QPS:1211.8
+ *   Linux   优化前QPS:155.1
+ *
+ *
+ *
+ * 展示商品列表
+ *
+ *
+ */
 @Controller
 @RequestMapping("/goods")
 public class GoodsController {
